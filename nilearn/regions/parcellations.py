@@ -251,9 +251,7 @@ class Parcellations(MultiPCA):
 
         * This object uses spatially-constrained AgglomerativeClustering for
           method='ward' or 'complete' or 'average' and spatially-constrained
-          ReNA clustering for method='rena'. Spatial connectivity matrix
-          (voxel-to-voxel) is built-in object which means no need of explicitly
-          giving the matrix.
+          ReNA clustering for method='rena'.
 
     """
     VALID_METHODS = ['kmeans', 'ward', 'complete', 'average', 'rena']
@@ -346,7 +344,7 @@ class Parcellations(MultiPCA):
                                      random_state=self.random_state,
                                      verbose=max(0, self.verbose - 1))
             labels = self._cache(_estimator_fit,
-                                 func_memory_level=1)(components.T, kmeans)
+                                 func_memory_level=self.memory_level)(components.T, kmeans)
 
         elif self.method == 'rena':
             rena = ReNA(mask_img_, n_clusters=self.n_parcels,
@@ -354,8 +352,7 @@ class Parcellations(MultiPCA):
                         memory=self.memory, memory_level=self.memory_level,
                         verbose=max(0, self.verbose - 1))
             method = 'rena'
-            labels = \
-                self._cache(_estimator_fit, func_memory_level=1)(components.T,
+            labels = self._cache(_estimator_fit, func_memory_level=self.memory_level)(components.T,
                                                                  rena, method)
 
         else:
@@ -374,7 +371,7 @@ class Parcellations(MultiPCA):
                 linkage=self.method, memory=self.memory)
 
             labels = self._cache(_estimator_fit,
-                                 func_memory_level=1)(components.T,
+                                 func_memory_level=self.memory_level)(components.T,
                                                       agglomerative)
 
             self.connectivity_ = connectivity
@@ -434,7 +431,7 @@ class Parcellations(MultiPCA):
 
         region_signals = Parallel(n_jobs=self.n_jobs)(
             delayed(self._cache(_labels_masker_extraction,
-                                func_memory_level=2))
+                                func_memory_level=self.memory_level))
             (img, masker, confound)
             for img, confound in zip(imgs_list, confounds))
 
@@ -500,7 +497,8 @@ class Parcellations(MultiPCA):
             single_subject = False
 
         imgs = Parallel(n_jobs=self.n_jobs)(
-            delayed(self._cache(signals_to_img_labels, func_memory_level=2))
+            delayed(self._cache(signals_to_img_labels,
+            func_memory_level=self.memory_level))
             (each_signal, self.labels_img_, self.mask_img_)
             for each_signal in signals)
 
