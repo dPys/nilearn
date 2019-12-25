@@ -159,7 +159,7 @@ def _fast_smooth_array(arr):
     return smoothed_arr
 
 
-def _smooth_array(arr, affine, fwhm=None, ensure_finite=True, copy=True):
+def _smooth_array(arr, affine, fwhm=None, ensure_finite=True, copy=False):
     """Smooth images by applying a Gaussian filter.
 
     Apply a Gaussian filter along the three first dimensions of arr.
@@ -222,7 +222,9 @@ def _smooth_array(arr, affine, fwhm=None, ensure_finite=True, copy=True):
 
     if ensure_finite:
         # SPM tends to put NaNs in the data outside the brain
-        arr[np.logical_not(np.isfinite(arr))] = 0
+        non_finite_mask = np.logical_not(np.isfinite(arr))
+        if non_finite_mask.sum() > 0: # any non_finite_mask values?
+            arr[non_finite_mask] = 0
 
     if fwhm == 'fast':
         arr = _fast_smooth_array(arr)
@@ -286,7 +288,7 @@ def smooth_img(imgs, fwhm):
         img = check_niimg(img)
         affine = img.affine
         filtered = _smooth_array(get_data(img), affine, fwhm=fwhm,
-                                 ensure_finite=True, copy=True)
+                                 ensure_finite=True, copy=False)
         ret.append(new_img_like(img, filtered, affine, copy_header=True))
 
     if single_img:
@@ -681,7 +683,6 @@ def new_img_like(ref_niimg, data, affine=None, copy_header=False):
         A loaded image with the same type (and header) as the reference image.
     """
     # Hand-written loading code to avoid too much memory consumption
-    orig_ref_niimg = ref_niimg
     if (not isinstance(ref_niimg, _basestring)
             and not hasattr(ref_niimg, 'get_data')
             and not hasattr(ref_niimg, 'get_fdata')
@@ -694,12 +695,12 @@ def new_img_like(ref_niimg, data, affine=None, copy_header=False):
             ref_niimg = nibabel.load(ref_niimg)
         else:
             raise TypeError(('The reference image should be a niimg, %r '
-                            'was passed') % orig_ref_niimg)
+                            'was passed') % ref_niimg)
 
     if affine is None:
         affine = ref_niimg.affine
     if data.dtype == bool:
-        default_dtype = np.int8
+        default_dtype = np.uint8
         if isinstance(ref_niimg, nibabel.freesurfer.mghformat.MGHImage):
             default_dtype = np.uint8
         data = as_ndarray(data, dtype=default_dtype)

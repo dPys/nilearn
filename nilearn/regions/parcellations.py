@@ -35,7 +35,7 @@ def _estimator_fit(data, estimator, method=None):
         labels_ estimated from estimator
     """
     if method == 'rena':
-        rena = ReNA(mask_img=estimator.mask_img,
+        estimator = ReNA(mask_img=estimator.mask_img,
                     n_clusters=estimator.n_clusters,
                     scaling=estimator.scaling,
                     n_iter=estimator.n_iter,
@@ -43,15 +43,12 @@ def _estimator_fit(data, estimator, method=None):
                     memory=estimator.memory,
                     memory_level=estimator.memory_level,
                     verbose=estimator.verbose)
-        rena.fit(data)
-        labels_ = rena.labels_
-
+        estimator.fit(data)
     else:
         estimator = clone(estimator)
         estimator.fit(data.T)
-        labels_ = estimator.labels_
 
-    return labels_
+    return estimator.labels_
 
 
 def _check_parameters_transform(imgs, confounds):
@@ -102,9 +99,7 @@ def _labels_masker_extraction(img, masker, confound):
     signals: numpy array
         Signals extracted on given img
     """
-    masker = clone(masker)
-    signals = masker.fit_transform(img, confounds=confound)
-    return signals
+    return masker.fit_transform(img, confounds=confound)
 
 
 class Parcellations(MultiPCA):

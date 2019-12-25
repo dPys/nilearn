@@ -15,14 +15,7 @@ from .compat import _basestring
 
 
 def _get_data(img):
-    # copy-pasted from https://github.com/nipy/nibabel/blob/de44a105c1267b07ef9e28f6c35b31f851d5a005/nibabel/dataobj_images.py#L204
-    # get_data is removed from nibabel because:
-    # see https://github.com/nipy/nibabel/wiki/BIAP8
-    if img._data_cache is not None:
-        return img._data_cache
-    data = np.asanyarray(img._dataobj)
-    img._data_cache = data
-    return data
+    return np.asanyarray(img.dataobj)
 
 
 def _safe_get_data(img, ensure_finite=False):
@@ -86,7 +79,7 @@ def _get_target_dtype(dtype, target_dtype):
         return None
     if target_dtype == 'auto':
         if dtype.kind == 'i':
-            target_dtype = np.int32
+            target_dtype = np.uint8
         else:
             target_dtype = np.float32
     if target_dtype == dtype:
@@ -131,7 +124,7 @@ def load_niimg(niimg, dtype=None):
         if niimg.header is not None:
             niimg = new_img_like(niimg, _get_data(niimg).astype(dtype),
                                 niimg.affine, copy_header=True)
-            niimg.header.set_data_dtype(dtype)        
+            niimg.header.set_data_dtype(dtype)
         else:
             niimg = new_img_like(niimg, _get_data(niimg).astype(dtype),
                                 niimg.affine)

@@ -85,6 +85,7 @@ def as_ndarray(arr, copy=False, dtype=None, order='K'):
     # numpy.asarray never copies a subclass of numpy.ndarray (even for
     #     memmaps) when dtype is unchanged.
     # .astype() always copies
+    import gc
 
     if order not in ("C", "F", "A", "K", None):
         raise ValueError("Invalid value for 'order': %s" % str(order))
@@ -125,6 +126,7 @@ def as_ndarray(arr, copy=False, dtype=None, order='K'):
     else:
         raise ValueError("Type not handled: %s" % arr.__class__)
 
+    gc.collect()
     return ret
 
 
