@@ -5,7 +5,7 @@ The main purpose of these classes is to have auto adjust of axes size to
 the data with different layout of cuts.
 """
 
-import collections
+import collections.abc
 import numbers
 from distutils.version import LooseVersion
 
@@ -395,7 +395,7 @@ class GlassBrainAxes(BaseAxes):
 
         # Allow markers only in their respective hemisphere when appropriate
         if self.direction in 'lr':
-            if not isinstance(marker_color, _utils.compat._basestring) and \
+            if not isinstance(marker_color, str) and \
                     not isinstance(marker_color, np.ndarray):
                 marker_color = np.asarray(marker_color)
             relevant_coords = []
@@ -412,7 +412,7 @@ class GlassBrainAxes(BaseAxes):
             # making any selection in 'l' or 'r' color.
             # More likely that user wants to display all nodes to be in
             # same color.
-            if not isinstance(marker_color, _utils.compat._basestring) and \
+            if not isinstance(marker_color, str) and \
                     len(marker_color) != 1:
                 marker_color = marker_color[relevant_coords]
 
@@ -608,7 +608,7 @@ class BaseSlicer(object):
             axes = [0., 0., 1., 1.]
             if leave_space:
                 axes = [0.3, 0, .7, 1.]
-        if isinstance(axes, collections.Sequence):
+        if isinstance(axes, collections.abc.Sequence):
             axes = figure.add_axes(axes)
         # People forget to turn their axis off, or to set the zorder, and
         # then they cannot see their slicer
@@ -876,9 +876,12 @@ class BaseSlicer(object):
 
         self._colorbar_ax.yaxis.tick_left()
         tick_color = 'w' if self._black_bg else 'k'
+        outline_color = 'w' if self._black_bg else 'k'
+
         for tick in self._colorbar_ax.yaxis.get_ticklabels():
             tick.set_color(tick_color)
         self._colorbar_ax.yaxis.set_tick_params(width=0)
+        self._cbar.outline.set_edgecolor(outline_color)
 
     def add_edges(self, img, color='r'):
         """ Plot the edges of a 3D map in all the views.
@@ -1576,7 +1579,7 @@ class BaseStackedSlicer(BaseSlicer):
             lower, upper = bounds['xyz'.index(cls._direction)]
             cut_coords = np.linspace(lower, upper, cut_coords).tolist()
         else:
-            if (not isinstance(cut_coords, collections.Sequence) and
+            if (not isinstance(cut_coords, collections.abc.Sequence) and
                     isinstance(cut_coords, numbers.Number)):
                 cut_coords = find_cut_slices(img,
                                              direction=cls._direction,
