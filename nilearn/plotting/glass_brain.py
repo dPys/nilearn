@@ -176,13 +176,13 @@ def plot_brain_schematics(ax, direction, **kwargs):
     with open(json_filename) as json_file:
         json_content = json.loads(json_file.read())
 
-    mpl_patches = _get_mpl_patches(json_content,
-                                   transform=transform + ax.transData,
-                                   invert_color=black_bg,
-                                   **kwargs)
+#    mpl_patches = _get_mpl_patches(json_content,
+#                                   transform=transform + ax.transData,
+#                                   invert_color=black_bg,
+#                                   **kwargs)
 
-    for mpl_patch in mpl_patches:
-        ax.add_patch(mpl_patch)
+#    for mpl_patch in mpl_patches:
+#        ax.add_patch(mpl_patch)
 
     object_bounds = _get_object_bounds(json_content, transform)
 
