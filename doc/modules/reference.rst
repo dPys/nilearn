@@ -67,6 +67,7 @@ the :ref:`user guide <user_guide>` for more information and usage examples.
    fetch_atlas_destrieux_2009
    fetch_atlas_harvard_oxford
    fetch_atlas_msdl
+   fetch_atlas_difumo
    fetch_coords_power_2011
    fetch_coords_seitzman_2018
    fetch_atlas_smith_2009
@@ -132,8 +133,8 @@ the :ref:`user guide <user_guide>` for more information and usage examples.
 
    Decoder
    DecoderRegressor
-   fREMClassifier
-   fREMRegressor
+   FREMClassifier
+   FREMRegressor
    SpaceNetClassifier
    SpaceNetRegressor
    SearchLight
@@ -337,11 +338,18 @@ the :ref:`user guide <user_guide>` for more information and usage examples.
    plot_glass_brain
    plot_connectome
    plot_connectome_strength
+   plot_markers
    plot_prob_atlas
    plot_carpet
    plot_surf
    plot_surf_roi
+   plot_surf_contours
    plot_surf_stat_map
+   plot_img_on_surf
+   plot_img_comparison
+   plot_design_matrix
+   plot_event
+   plot_contrast_matrix
    view_surf
    view_img_on_surf
    view_connectome
@@ -386,10 +394,10 @@ the :ref:`user guide <user_guide>` for more information and usage examples.
 .. _stats_ref:
 
 
-:mod:`nilearn.stats`: Generalized Linear Models
+:mod:`nilearn.glm`: Generalized Linear Models
 ================================================
 
-.. automodule:: nilearn.stats
+.. automodule:: nilearn.glm
    :no-members:
    :no-inherited-members:
 
@@ -397,7 +405,7 @@ the :ref:`user guide <user_guide>` for more information and usage examples.
 
 **Classes**:
 
-.. currentmodule:: nilearn.stats
+.. currentmodule:: nilearn.glm
 
 .. autosummary::
    :toctree: generated/
@@ -414,7 +422,7 @@ the :ref:`user guide <user_guide>` for more information and usage examples.
 
 **Functions**:
 
-.. currentmodule:: nilearn.stats
+.. currentmodule:: nilearn.glm
 
 .. autosummary::
    :toctree: generated/
@@ -425,19 +433,19 @@ the :ref:`user guide <user_guide>` for more information and usage examples.
     expression_to_contrast_vector
     fdr_threshold
     cluster_level_inference
-    map_threshold
+    threshold_stats_img
 
 
-:mod:`nilearn.stats.first_level_model`
+:mod:`nilearn.glm.first_level`
 --------------------------------------
 
-.. automodule:: nilearn.stats.first_level_model
+.. automodule:: nilearn.glm.first_level
    :no-members:
    :no-inherited-members:
 
 **Classes**:
 
-.. currentmodule:: nilearn.stats.first_level_model
+.. currentmodule:: nilearn.glm.first_level
 
 .. autosummary::
    :toctree: generated/
@@ -447,7 +455,7 @@ the :ref:`user guide <user_guide>` for more information and usage examples.
 
 **Functions**:
 
-.. currentmodule:: nilearn.stats.first_level_model
+.. currentmodule:: nilearn.glm.first_level
 
 .. autosummary::
    :toctree: generated/
@@ -455,7 +463,7 @@ the :ref:`user guide <user_guide>` for more information and usage examples.
 
     check_design_matrix
     compute_regressor
-    first_level_models_from_bids
+    first_level_from_bids
     glover_dispersion_derivative
     glover_hrf
     glover_time_derivative
@@ -466,16 +474,16 @@ the :ref:`user guide <user_guide>` for more information and usage examples.
     spm_hrf
     spm_time_derivative
 
-:mod:`nilearn.stats.second_level_model`
+:mod:`nilearn.glm.second_level`
 ---------------------------------------
 
-.. automodule:: nilearn.stats.second_level_model
+.. automodule:: nilearn.glm.second_level
    :no-members:
    :no-inherited-members:
 
 **Classes**:
 
-.. currentmodule:: nilearn.stats.second_level_model
+.. currentmodule:: nilearn.glm.second_level
 
 .. autosummary::
    :toctree: generated/
@@ -485,7 +493,7 @@ the :ref:`user guide <user_guide>` for more information and usage examples.
 
 **Functions**:
 
-.. currentmodule:: nilearn.stats.second_level_model
+.. currentmodule:: nilearn.glm.second_level
 
 .. autosummary::
    :toctree: generated/
@@ -497,8 +505,8 @@ the :ref:`user guide <user_guide>` for more information and usage examples.
 .. _reporting_ref:
 
 
-:mod:`nilearn.reporting`: Report Plotting Functions
-====================================================
+:mod:`nilearn.reporting`: Reporting Functions
+=============================================
 
 .. automodule:: nilearn.reporting
    :no-members:
@@ -512,9 +520,6 @@ the :ref:`user guide <user_guide>` for more information and usage examples.
    :toctree: generated/
    :template: function.rst
 
-   compare_niimgs
-   plot_design_matrix
-   plot_contrast_matrix
    get_clusters_table
    make_glm_report
 

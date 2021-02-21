@@ -145,23 +145,25 @@ def _get_object_bounds(json_content, transform):
     return xmin - xmargin, xmax + xmargin, ymin - ymargin, ymax + ymargin
 
 
-def plot_brain_schematics(ax, direction, **kwargs):
+def plot_brain_schematics(ax, direction, add_patches=False, **kwargs):
     """Creates matplotlib patches from a json custom format and plots them
-       on a matplotlib Axes.
+    on a matplotlib Axes.
 
-       Parameters
-       ----------
-           ax: a MPL axes instance
-                The axes in which the plots will be drawn
-            direction: {'x', 'y', 'z', 'l', 'r'}
-                The directions of the view
-            **kwargs:
-                Passed to the matplotlib patches constructor
+    Parameters
+    ----------
+    ax : A MPL axes instance
+        The axes in which the plots will be drawn.
 
-       Returns
-       -------
-       object_bounds: (xmin, xmax, ymin, ymax) tuple
-           Useful for the caller to be able to set axes limits
+    direction : {'x', 'y', 'z', 'l', 'r'}
+        The directions of the view.
+
+    **kwargs :
+        Passed to the matplotlib patches constructor.
+
+    Returns
+    -------
+    object_bounds : (xmin, xmax, ymin, ymax) tuple
+        Useful for the caller to be able to set axes limits.
 
     """
     if LooseVersion(matplotlib.__version__) >= LooseVersion("2.0"):
@@ -176,13 +178,14 @@ def plot_brain_schematics(ax, direction, **kwargs):
     with open(json_filename) as json_file:
         json_content = json.loads(json_file.read())
 
-#    mpl_patches = _get_mpl_patches(json_content,
-#                                   transform=transform + ax.transData,
-#                                   invert_color=black_bg,
-#                                   **kwargs)
+    if add_patches is True:
+        mpl_patches = _get_mpl_patches(json_content,
+                                      transform=transform + ax.transData,
+                                      invert_color=black_bg,
+                                      **kwargs)
 
-#    for mpl_patch in mpl_patches:
-#        ax.add_patch(mpl_patch)
+        for mpl_patch in mpl_patches:
+           ax.add_patch(mpl_patch)
 
     object_bounds = _get_object_bounds(json_content, transform)
 
