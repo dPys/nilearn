@@ -256,7 +256,7 @@ class Parcellations(MultiPCA):
     VALID_METHODS = ['kmeans', 'ward', 'complete',
                      'average', 'rena', 'hierarchical_kmeans']
 
-    def __init__(self, method, n_parcels=50,
+    def __init__(self, method, n_parcels=50, connectivity='auto',
                  random_state=0, mask=None, smoothing_fwhm=4.,
                  standardize=False, detrend=False,
                  low_pass=None, high_pass=None, t_r=None,
@@ -270,6 +270,7 @@ class Parcellations(MultiPCA):
         self.n_parcels = n_parcels
         self.scaling = scaling
         self.n_iter = n_iter
+        self.connectivity = connectivity
 
         MultiPCA.__init__(self, n_components=200,
                           random_state=random_state,
@@ -368,8 +369,13 @@ class Parcellations(MultiPCA):
         else:
             mask_ = _safe_get_data(mask_img_).astype(bool)
             shape = mask_.shape
-            connectivity = image.grid_to_graph(n_x=shape[0], n_y=shape[1],
-                                               n_z=shape[2], mask=mask_)
+
+            if self.connectivity is 'auto':
+                shape = mask_.shape
+                connectivity = image.grid_to_graph(n_x=shape[0], n_y=shape[1],
+                                                   n_z=shape[2], mask=mask_)
+            else:
+                connectivity = self.connectivity
 
             from sklearn.cluster import AgglomerativeClustering
 
